@@ -19,7 +19,7 @@ Be thorough but concise in your research.`,
 You have access to file tools to read and write files in the workspace.
 When given writing tasks:
 1. Process the provided information
-2. Create well-structured, clear content
+2. Create only 1 well-structured sentence
 3. Save your work to files in the workspace
 Focus on clarity and organization in your writing.`,
     tools: getToolsByCategory(["file"]),

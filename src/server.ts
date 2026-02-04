@@ -4,6 +4,8 @@ import fs from "fs/promises";
 import path from "path";
 import { Orchestrator } from "./orchestrator.js";
 
+const WORKSPACE_DIR = path.resolve(process.cwd(), "workspace");
+
 const PORT = 3000;
 
 type SSEClient = {
@@ -85,12 +87,26 @@ Provide feedback on:
     },
   ]);
 
+  // Read summary.md and extract conclusion
+  let conclusion = "No conclusion found.";
+  try {
+    const summaryPath = path.join(WORKSPACE_DIR, "summary.md");
+    const summaryContent = await fs.readFile(summaryPath, "utf-8");
+    const conclusionMatch = summaryContent.match(/## Conclusion\s*\n+([\s\S]*?)(?=\n##|$)/i);
+    if (conclusionMatch) {
+      conclusion = conclusionMatch[1].trim();
+    }
+  } catch {
+    // File might not exist
+  }
+
   sendEvent("pipeline_complete", {
     results: {
       researcher: results[0],
       writer: results[1],
       reviewer: results[2],
     },
+    conclusion,
   });
 
   return results;
